@@ -41,3 +41,25 @@ export async function yoloExecAPI(configs = configYolo) {
   return [null, response.data];
 }
 
+async function yoloCallAPI(configs = configYolo) {
+  if (!configs) throw new Error('Missing "configs"!');
+  if (!configs.url) throw new Error('Missing "configs.url"!');
+
+  const token = Cookies.get("token");
+
+  try {
+    const response = await axios({
+      method: configs.method || "get",
+      url: API_YOLO_URL + configs.url,
+      data: configs.data || {},
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    return error.response || null;
+  }
+}
